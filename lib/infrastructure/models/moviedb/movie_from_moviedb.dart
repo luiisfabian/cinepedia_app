@@ -1,19 +1,4 @@
 class MovieFromMovieDB {
-    final bool adult;
-    final String backdropPath;
-    final List<int> genreIds;
-    final int id;
-    final String originalLanguage;
-    final String originalTitle;
-    final String overview;
-    final double popularity;
-    final String posterPath;
-    final DateTime releaseDate;
-    final String title;
-    final bool video;
-    final double voteAverage;
-    final int voteCount;
-
     MovieFromMovieDB({
         required this.adult,
         required this.backdropPath,
@@ -30,6 +15,21 @@ class MovieFromMovieDB {
         required this.voteAverage,
         required this.voteCount,
     });
+
+    final bool adult;
+    final String backdropPath;
+    final List<int> genreIds;
+    final int id;
+    final String originalLanguage;
+    final String originalTitle;
+    final String overview;
+    final double popularity;
+    final String posterPath;
+    final DateTime releaseDate;
+    final String title;
+    final bool video;
+    final double voteAverage;
+    final int voteCount;
 
     factory MovieFromMovieDB.fromJson(Map<String, dynamic> json) => MovieFromMovieDB(
         adult: json["adult"] ?? false,
