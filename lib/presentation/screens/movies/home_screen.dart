@@ -1,11 +1,9 @@
-import 'package:cinemapedia_app/config/constants/environment.dart';
 import 'package:cinemapedia_app/presentation/providers/movies/movies_providers.dart';
 import 'package:cinemapedia_app/presentation/providers/movies/movies_slideshow_provider.dart';
 import 'package:cinemapedia_app/presentation/widgets/movies/movies_slideshow.dart';
 import 'package:cinemapedia_app/presentation/widgets/shared/custom_appbar.dart';
+import 'package:cinemapedia_app/presentation/widgets/shared/custom_bottom_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,7 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: HomeView());
+    return const Scaffold(body: HomeView(), bottomNavigationBar: CustomBottomNavigationBar(),);
   }
 }
 
@@ -42,11 +40,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     final slideShowMovies = ref.watch(moviesSlideShowProvider);
 
-    
-    if (slideShowMovies.length == 0) return CircularProgressIndicator();
+    if (slideShowMovies.length == 0) return const CircularProgressIndicator();
     return Column(
       children: [
-        CustomAppbar(),
+        const CustomAppbar(),
 
         MoviesSlideShow(movies: slideShowMovies)
         // Expanded(
