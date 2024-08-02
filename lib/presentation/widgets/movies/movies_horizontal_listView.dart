@@ -3,7 +3,7 @@ import 'package:cinemapedia_app/config/helpers/human_format.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
-class MoviesHorizontalListview extends StatelessWidget {
+class MoviesHorizontalListview extends StatefulWidget {
   final List<Movie> movies;
   final String? title;
   final String? subTitle;
@@ -17,23 +17,59 @@ class MoviesHorizontalListview extends StatelessWidget {
       this.loadNextPage});
 
   @override
+  State<MoviesHorizontalListview> createState() =>
+      _MoviesHorizontalListviewState();
+}
+
+class _MoviesHorizontalListviewState extends State<MoviesHorizontalListview> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    scrollController.addListener(
+      () {
+        if (widget.loadNextPage == null) {
+          return;
+        } else if ((scrollController.position.pixels + 200) >=
+            scrollController.position.maxScrollExtent) {
+          print("load Next MOvies");
+
+          widget.loadNextPage!();
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    scrollController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 350,
       child: Column(
         children: [
-          if (title != null || subTitle != null)
+          if (widget.title != null || widget.subTitle != null)
             _Title(
-              title: title,
-              subtitle: subTitle,
+              title: widget.title,
+              subtitle: widget.subTitle,
             ),
           Expanded(
               child: ListView.builder(
-            itemCount: movies.length,
+            controller: scrollController,
+            itemCount: widget.movies.length,
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
-              return _Slide(movie: movies[index]);
+              return _Slide(movie: widget.movies[index]);
             },
           ))
         ],
@@ -84,7 +120,7 @@ class _Slide extends StatelessWidget {
             ),
           ),
           SizedBox(
-             width: 100, 
+            width: 100,
             child: Row(
               children: [
                 Icon(
@@ -100,11 +136,8 @@ class _Slide extends StatelessWidget {
                       ?.copyWith(color: Colors.yellow.shade800),
                 ),
                 const Spacer(),
-                Text(
-                  HumanFormats.number(movie.popularity),
-                  style: textStyle.bodySmall
-                    
-                ),
+                Text(HumanFormats.number(movie.popularity),
+                    style: textStyle.bodySmall),
               ],
             ),
           )
