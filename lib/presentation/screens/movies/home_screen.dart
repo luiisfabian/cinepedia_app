@@ -45,39 +45,51 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final slideShowMovies = ref.watch(moviesSlideShowProvider);
 
     if (slideShowMovies.length == 0) return const CircularProgressIndicator();
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const CustomAppbar(),
-      
-          MoviesSlideShow(movies: slideShowMovies),
-          MoviesHorizontalListview(
-            movies: nowPlayingMovies,
-            title: "En cines",
-            subTitle: "Lunes 20",
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
-          ),
-          MoviesHorizontalListview(
-            movies: nowPlayingMovies,
-            title: "En cines",
-            subTitle: "Lunes 20",
-            loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
-          ),
-          
-      
-          // Expanded(
-          //   child: ListView.builder(
-          //     itemCount: nowPlayingMovies.length,
-          //     itemBuilder: (context, index) {
-          //       final movie = nowPlayingMovies[index];
-          //       return ListTile(
-          //         title: Text(movie.title),
-          //       );
-          //     },
-          //   ),
-          // )
-        ],
+    return CustomScrollView(slivers: [
+      SliverAppBar(
+        floating: true,
+        flexibleSpace: FlexibleSpaceBar(
+          title: const CustomAppbar(),
+        ),
       ),
-    );
+      SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return Column(
+            children: [
+              MoviesSlideShow(movies: slideShowMovies),
+              MoviesHorizontalListview(
+                movies: nowPlayingMovies,
+                title: "En cines",
+                subTitle: "Lunes 20",
+                loadNextPage: () =>
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+              ),
+              MoviesHorizontalListview(
+                movies: nowPlayingMovies,
+                title: "En cines",
+                subTitle: "Lunes 20",
+                loadNextPage: () =>
+                    ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+              ),
+
+              // Expanded(
+              //   child: ListView.builder(
+              //     itemCount: nowPlayingMovies.length,
+              //     itemBuilder: (context, index) {
+              //       final movie = nowPlayingMovies[index];
+              //       return ListTile(
+              //         title: Text(movie.title),
+              //       );
+              //     },
+              //   ),
+              // )
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          );
+        }, childCount: 1),
+      )
+    ]);
   }
 }
