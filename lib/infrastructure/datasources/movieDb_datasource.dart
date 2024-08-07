@@ -26,7 +26,6 @@ class MovieDbDatasource extends MoviesDatasource {
 
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async {
-    
     final response = await dio.get(
         'https://api.themoviedb.org/3/movie/now_playing',
         queryParameters: {'page': page});
@@ -36,8 +35,25 @@ class MovieDbDatasource extends MoviesDatasource {
 
   @override
   Future<List<Movie>> getPopularMovies({int page = 1}) async {
-
     final response = await dio.get('https://api.themoviedb.org/3/movie/popular',
+        queryParameters: {'page': page});
+
+    return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<List<Movie>> getTopRated({int page = 1}) async {
+    final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/top_rated',
+        queryParameters: {'page': page});
+
+    return _jsonToMovies(response.data);
+  }
+  
+  @override
+  Future<List<Movie>> getUpcomming({int page = 1}) async {
+  final response = await dio.get(
+        'https://api.themoviedb.org/3/movie/upcoming',
         queryParameters: {'page': page});
 
     return _jsonToMovies(response.data);
