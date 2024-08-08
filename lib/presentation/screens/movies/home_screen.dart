@@ -4,6 +4,7 @@ import 'package:cinemapedia_app/presentation/widgets/movies/movies_horizontal_li
 import 'package:cinemapedia_app/presentation/widgets/movies/movies_slideshow.dart';
 import 'package:cinemapedia_app/presentation/widgets/shared/custom_appbar.dart';
 import 'package:cinemapedia_app/presentation/widgets/shared/custom_bottom_navigation.dart';
+import 'package:cinemapedia_app/presentation/widgets/shared/full_screen_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -50,6 +51,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final slideShowMovies = ref.watch(moviesSlideShowProvider);
 
     if (slideShowMovies.isEmpty) return const CircularProgressIndicator();
+
+    return const  FullScreenLoader();
+
     return CustomScrollView(slivers: [
       const SliverAppBar(
         floating: true,
@@ -77,14 +81,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
 
               MoviesHorizontalListview(
-                movies: popularMovies,
+                movies: upcommingMovies,
                 title: "UpComing",
                 loadNextPage: () =>
                     ref.read(upcomingMoviesProvider.notifier).loadNextPage(),
               ),
 
               MoviesHorizontalListview(
-                movies: popularMovies,
+                movies: topRatedMovies,
                 title: "top Rated",
                 loadNextPage: () =>
                     ref.read(topRatedMoviesProvider.notifier).loadNextPage(),
