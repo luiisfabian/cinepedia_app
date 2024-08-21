@@ -30,7 +30,7 @@ class MovieMapper {
         backdropPath: moviedb.backdropPath != ''
             ? 'https://image.tmdb.org/t/p/w500/${moviedb.backdropPath}.jpg'
             : 'https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
-        genreIds: moviedb.genres.map((e) => e.toString()).toList(),
+        genreIds: moviedb.genres.map((e) => e.name).toList(),
         id: moviedb.id,
         originalLanguage: moviedb.originalLanguage,
         originalTitle: moviedb.originalTitle,
