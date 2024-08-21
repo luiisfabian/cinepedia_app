@@ -7,8 +7,10 @@ final appRouter = GoRouter(initialLocation: '/', routes: [
       path: '/',
       name: HomeScreen.name,
       builder: (context, state) => const HomeScreen(),
-      routes: [
-        GoRoute(
+  
+       
+      ),
+       GoRoute(
             path: '/movie/:id',
             name: MovieScreen.name,
             builder: (context, state) {
@@ -18,5 +20,4 @@ final appRouter = GoRouter(initialLocation: '/', routes: [
                 movieId: movieId,
               );
             }),
-      ]),
 ]);
