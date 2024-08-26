@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:cinemapedia_app/presentation/providers/actors/actors_by_movie_provider.dart';
 import 'package:cinemapedia_app/presentation/providers/movies/movie_info_provider.dart';
@@ -64,7 +65,7 @@ class _CustomSliverMovieDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -104,11 +105,11 @@ class _CustomSliverMovieDetails extends StatelessWidget {
         //mostrar generos de la pelicula
 
         Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Wrap(
             children: [
               ...movie.genreIds.map((genre) => Container(
-                    margin: EdgeInsets.only(right: 10),
+                    margin: const EdgeInsets.only(right: 10),
                     child: Chip(
                       label: Text(genre),
                       shape: RoundedRectangleBorder(
@@ -120,11 +121,86 @@ class _CustomSliverMovieDetails extends StatelessWidget {
         ),
 
         // todoo mostrar actores
-        SizedBox(
-          height: 100,
+        _ActorsByMovie(
+          movieId: movie.id.toString(),
+        ),
+        const SizedBox(
+          height: 50,
         )
         // Placeholder()
       ],
+    );
+  }
+}
+
+class _ActorsByMovie extends ConsumerWidget {
+  final String movieId;
+
+  const _ActorsByMovie({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final actorsByMovie = ref.watch(actorsByMovieProvider);
+
+    if (actorsByMovie[movieId] == null) {
+      return const Center(
+          child: CircularProgressIndicator(
+        strokeWidth: 2,
+      ));
+    }
+
+    final actors = actorsByMovie[movieId];
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors!.length,
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+
+          return Container(
+            padding: EdgeInsets.all(8.0),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //foto
+                FadeInRight(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actor.profilePath,
+                      height: 180,
+                      width: 135,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                FadeIn(
+                  child: Text(
+                    actor.name,
+                    maxLines: 2,
+                  ),
+                ),
+                FadeIn(
+                  child: Text(
+                    actor.character ?? '',
+                    maxLines: 2,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ),
+                //nombre del actor
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -155,6 +231,13 @@ class _CustomSliverAppBar extends StatelessWidget {
               child: Image.network(
                 movie.posterPath,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    return SizedBox();
+                  } else {
+                    return FadeIn(child: child);
+                  }
+                },
               ),
             ),
             const SizedBox.expand(
