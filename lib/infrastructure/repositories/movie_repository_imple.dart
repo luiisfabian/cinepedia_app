@@ -31,4 +31,10 @@ class MovieRespositoryImplementation extends MoviesRepository {
   Future<Movie> getMovieById(String id) {
     return datasource.getMovieById(id);
   }
+  
+  @override
+  Future<List<Movie>> searcMovies(String query) {
+        return datasource.searcMovies(query);
+
+  }
 }
