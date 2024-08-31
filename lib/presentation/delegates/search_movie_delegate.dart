@@ -2,9 +2,15 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
+typedef SearchMovieCallBack = Future<List<Movie>> Function(String query);
+
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   String get searchFieldLabel => 'Buscar Pelicula';
+
+  final SearchMovieCallBack searchMovies;
+
+  SearchMovieDelegate({required this.searchMovies});
 
   /// todo: Sirve para construir las acciones
   @override
@@ -39,6 +45,22 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   // todo: mientras la persona este escribiendo salen los resultados
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Text("Hola buildSuggestions");
+    return FutureBuilder(
+      future: searchMovies(query),
+      initialData: [],
+      builder: (context, snapshot) {
+      
+        final movies = snapshot.data ?? [];
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final movie = movies[index];
+            return ListTile(
+              title: Text(movie.title),
+            );
+          },
+          itemCount: movies.length,
+        );
+      },
+    );
   }
 }

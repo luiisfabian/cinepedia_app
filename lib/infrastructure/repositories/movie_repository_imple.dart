@@ -33,8 +33,8 @@ class MovieRespositoryImplementation extends MoviesRepository {
   }
   
   @override
-  Future<List<Movie>> searcMovies(String query) {
-        return datasource.searcMovies(query);
+  Future<List<Movie>> searchMovies(String query) {
+        return datasource.searchMovies(query);
 
   }
 }

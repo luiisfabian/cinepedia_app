@@ -75,7 +75,7 @@ class MovieDbDatasource extends MoviesDatasource {
   }
   
   @override
-  Future<List<Movie>> searcMovies(String query) async {
+  Future<List<Movie>> searchMovies(String query) async {
    final response = await dio.get(
         'https://api.themoviedb.org/3/search/movie',
         queryParameters: {'query': query});
