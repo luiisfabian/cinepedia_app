@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia_app/config/helpers/human_format.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
@@ -10,8 +11,39 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   String get searchFieldLabel => 'Buscar Pelicula';
 
   final SearchMovieCallBack searchMovies;
+  final StreamController<List<Movie>> bounceMovies =
+      StreamController.broadcast();
+
+  Timer? _debounceTimer;
 
   SearchMovieDelegate({required this.searchMovies});
+
+  void clearStreams() {
+    bounceMovies.close();
+  }
+
+  void _onQueryChange(String query) {
+    print("query Stringcambio");
+
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    } else {
+      _debounceTimer = Timer(
+        const Duration(microseconds: 500),
+        () async {
+          /// buscar peliculas
+          print("Buscando Pelicula");
+          if (query.isEmpty) {
+            bounceMovies.add([]);
+            return;
+          }
+
+          final movies = await searchMovies(query);
+          bounceMovies.add(movies);
+        },
+      );
+    }
+  }
 
   /// todo: Sirve para construir las acciones
   @override
@@ -32,7 +64,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: () => close(context, null),
+      onPressed: () {
+        clearStreams();
+        close(context, null);
+      },
       icon: Icon(Icons.arrow_back_ios_outlined),
     );
   }
@@ -46,21 +81,24 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   // todo: mientras la persona este escribiendo salen los resultados
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder(
-      future: searchMovies(query),
+    _onQueryChange(query);
+    return StreamBuilder(
+      stream: bounceMovies.stream,
       initialData: [],
       builder: (context, snapshot) {
         final movies = snapshot.data ?? [];
         return ListView.builder(
           itemBuilder: (context, index) {
+            print("Realizanod peticion");
             final movie = movies[index];
             // return ListTile(
             //   title: Text(movie.title),
             // );
             return _MovieItem(
-              movie: movie,
-              onMovieSelected: close,
-            );
+                movie: movie,
+                onMovieSelected: (context, movie) {
+                  close(context, movie);
+                });
           },
           itemCount: movies.length,
         );
