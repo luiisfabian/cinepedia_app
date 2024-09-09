@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
 //peliculas previamente probadas
-final searchMoviesProvider =
+final searchedMoviesProvider =
     StateNotifierProvider<SearchedMoviesNotifier, List<Movie>>((ref) {
   final movieRepository = ref.read(movieRepositoryProvider);
 

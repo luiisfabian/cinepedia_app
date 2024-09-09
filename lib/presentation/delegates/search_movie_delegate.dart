@@ -15,8 +15,9 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       StreamController.broadcast();
 
   Timer? _debounceTimer;
+  final List<Movie> initialMovies;
 
-  SearchMovieDelegate({required this.searchMovies});
+  SearchMovieDelegate({required this.searchMovies,  required this.initialMovies });
 
   void clearStreams() {
     bounceMovies.close();
@@ -32,11 +33,11 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
         const Duration(microseconds: 500),
         () async {
           /// buscar peliculas
-          print("Buscando Pelicula");
-          if (query.isEmpty) {
-            bounceMovies.add([]);
-            return;
-          }
+          // print("Buscando Pelicula");
+          // if (query.isEmpty) {
+          //   bounceMovies.add([]);
+          //   return;
+          // }
 
           final movies = await searchMovies(query);
           bounceMovies.add(movies);
@@ -84,7 +85,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     _onQueryChange(query);
     return StreamBuilder(
       stream: bounceMovies.stream,
-      initialData: [],
+      initialData: initialMovies,
       builder: (context, snapshot) {
         final movies = snapshot.data ?? [];
         return ListView.builder(
