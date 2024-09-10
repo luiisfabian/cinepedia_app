@@ -15,9 +15,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       StreamController.broadcast();
 
   Timer? _debounceTimer;
-  final List<Movie> initialMovies;
+  List<Movie> initialMovies;
 
-  SearchMovieDelegate({required this.searchMovies,  required this.initialMovies });
+  SearchMovieDelegate({required this.searchMovies, required this.initialMovies})
+      : super(textInputAction: TextInputAction.done);
 
   void clearStreams() {
     bounceMovies.close();
@@ -40,6 +41,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
           // }
 
           final movies = await searchMovies(query);
+          initialMovies = movies;
+
           bounceMovies.add(movies);
         },
       );
@@ -76,28 +79,20 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   /// todo: van a aparecer los resultados al presionar enter
   @override
   Widget buildResults(BuildContext context) {
-    return const Text("Hola Build results");
-  }
-
-  // todo: mientras la persona este escribiendo salen los resultados
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    _onQueryChange(query);
+    // _onQueryChange(query);
     return StreamBuilder(
-      stream: bounceMovies.stream,
       initialData: initialMovies,
+      stream: bounceMovies.stream,
       builder: (context, snapshot) {
+        // final tempMovies = bounceMovies.stream.last;
         final movies = snapshot.data ?? [];
         return ListView.builder(
           itemBuilder: (context, index) {
-            print("Realizanod peticion");
             final movie = movies[index];
-            // return ListTile(
-            //   title: Text(movie.title),
-            // );
             return _MovieItem(
                 movie: movie,
                 onMovieSelected: (context, movie) {
+                  clearStreams();
                   close(context, movie);
                 });
           },
@@ -106,6 +101,17 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       },
     );
   }
+
+  // todo: mientras la persona este escribiendo salen los resultados
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    _onQueryChange(query);
+    return buildResultAndsuggestions();
+  }
+}
+
+Widget buildResultAndsuggestions() {
+  return buildResultAndsuggestions();
 }
 
 class _MovieItem extends StatelessWidget {
