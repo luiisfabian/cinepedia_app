@@ -11,8 +11,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   String get searchFieldLabel => 'Buscar Pelicula';
 
   final SearchMovieCallBack searchMovies;
-  final StreamController<List<Movie>> bounceMovies =
-      StreamController.broadcast();
+  StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
 
   Timer? _debounceTimer;
   List<Movie> initialMovies;
@@ -21,8 +20,9 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       : super(textInputAction: TextInputAction.done);
 
   void clearStreams() {
-    bounceMovies.close();
+    debouncedMovies.close();
   }
+
 
   void _onQueryChange(String query) {
     print("query Stringcambio");
@@ -80,15 +80,31 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   Widget buildResults(BuildContext context) {
     // _onQueryChange(query);
-    return StreamBuilder(
+
+    return buildResultAndSuggestion();
+  }
+
+  // todo: mientras la persona este escribiendo salen los resultados
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    _onQueryChange(query);
+    return buildResultAndSuggestion();
+  }
+}
+
+Widget buildResultAndSuggestion() {
+  return StreamBuilder(
+      stream: debouncedMovies.stream,
       initialData: initialMovies,
-      stream: bounceMovies.stream,
       builder: (context, snapshot) {
-        // final tempMovies = bounceMovies.stream.last;
         final movies = snapshot.data ?? [];
         return ListView.builder(
           itemBuilder: (context, index) {
+            print("Realizanod peticion");
             final movie = movies[index];
+            // return ListTile(
+            //   title: Text(movie.title),
+            // );
             return _MovieItem(
                 movie: movie,
                 onMovieSelected: (context, movie) {
@@ -98,20 +114,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
           },
           itemCount: movies.length,
         );
-      },
-    );
-  }
-
-  // todo: mientras la persona este escribiendo salen los resultados
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    _onQueryChange(query);
-    return buildResultAndsuggestions();
-  }
-}
-
-Widget buildResultAndsuggestions() {
-  return buildResultAndsuggestions();
+      });
 }
 
 class _MovieItem extends StatelessWidget {
