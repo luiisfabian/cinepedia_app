@@ -43,7 +43,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
           final movies = await searchMovies(query);
           initialMovies = movies;
 
-          bounceMovies.add(movies);
+          debouncedMovies.add(movies);
         },
       );
     }
@@ -90,9 +90,9 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     _onQueryChange(query);
     return buildResultAndSuggestion();
   }
-}
 
-Widget buildResultAndSuggestion() {
+
+  Widget buildResultAndSuggestion() {
   return StreamBuilder(
       stream: debouncedMovies.stream,
       initialData: initialMovies,
@@ -116,6 +116,9 @@ Widget buildResultAndSuggestion() {
         );
       });
 }
+
+}
+
 
 class _MovieItem extends StatelessWidget {
   final Movie movie;
