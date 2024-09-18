@@ -1,5 +1,6 @@
 import 'package:cinemapedia_app/presentation/screens/movies/home_screen.dart';
 import 'package:cinemapedia_app/presentation/screens/movies/movie_screen.dart';
+import 'package:cinemapedia_app/presentation/views/home_views/categories_view.dart';
 import 'package:cinemapedia_app/presentation/views/home_views/favorites_view.dart';
 import 'package:cinemapedia_app/presentation/views/views.dart';
 import 'package:go_router/go_router.dart';
@@ -35,14 +36,14 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
             // La ruta al segundo tab del navigation bar (categories)
-        // StatefulShellBranch(
-        //   routes: <RouteBase>[
-        //     GoRoute(
-        //       path: '/categories',
-        //       builder: (context, state) => const CategoriesView(),
-        //     )
-        //   ],
-        // ),
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            GoRoute(
+              path: '/categories',
+              builder: (context, state) => const CategoriesView(),
+            )
+          ],
+        ),
         StatefulShellBranch(routes: [
           GoRoute(
             builder: (context, state) {
