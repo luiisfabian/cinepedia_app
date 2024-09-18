@@ -4,32 +4,46 @@ import 'package:cinemapedia_app/presentation/views/home_views/favorites_view.dar
 import 'package:cinemapedia_app/presentation/views/views.dart';
 import 'package:go_router/go_router.dart';
 
-final appRouter = GoRouter(
+
+
+final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    ShellRoute(
-        builder: (context, state, child) {
-          return HomeScreen(childView: child);
-        },
-        routes: [
-          GoRoute(
-              builder: (context, state) {
-                return HomeView();
-              },
-              path: '/',
-              routes: [
-                GoRoute(
-                  path: 'movie/:id',
-                  name: MovieScreen.name,
-                  builder: (context, state) {
-                    final movieId = state.pathParameters['id'] ?? 'no-id';
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => HomeScreen(navigationShell: navigationShell),
+      branches: <StatefulShellBranch>[
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+                builder: (context, state) {
+                  return HomeView();
+                },
+                path: '/',
+                routes: [
+                  GoRoute(
+                    path: 'movie/:id',
+                    name: MovieScreen.name,
+                    builder: (context, state) {
+                      final movieId = state.pathParameters['id'] ?? 'no-id';
 
-                    return MovieScreen(
-                      movieId: movieId,
-                    );
-                  },
-                ),
-              ]),
+                      return MovieScreen(
+                        movieId: movieId,
+                      );
+                    },
+                  ),
+                ]),
+          ],
+        ),
+            // La ruta al segundo tab del navigation bar (categories)
+        // StatefulShellBranch(
+        //   routes: <RouteBase>[
+        //     GoRoute(
+        //       path: '/categories',
+        //       builder: (context, state) => const CategoriesView(),
+        //     )
+        //   ],
+        // ),
+        StatefulShellBranch(routes: [
           GoRoute(
             builder: (context, state) {
               return FavoritesView();
@@ -37,6 +51,8 @@ final appRouter = GoRouter(
             path: '/favorites',
           ),
         ])
+      ],
+    )
 
     //todo rutas: padre - hijo
     // GoRoute(
