@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
         index: pageIndex,
         children: viewRouter,
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: pageIndex),
     );
   }
 }
