@@ -218,6 +218,17 @@ class _CustomSliverAppBar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          onPressed: () {
+            //todo regalizar la funcion de toogle
+          },
+          icon: Icon(
+            Icons.favorite_border_rounded,
+            color: Colors.white,
+          ),
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         title: Text(
@@ -240,34 +251,57 @@ class _CustomSliverAppBar extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.7, 1.0],
-                    colors: [Colors.transparent, Colors.black87],
-                  ),
-                ),
-              ),
+            _CustomGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colorsGradients: [Colors.black54, Colors.transparent],
+              stops: [0.0, 0.2],
             ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomCenter,
-                    stops: [0.0, 0.2],
-                    colors: [
-                      Colors.black87,
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
+            _CustomGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colorsGradients: [Colors.transparent, Colors.black87],
+              stops: [0.7, 1.0],
+            ),
+            _CustomGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colorsGradients: [
+                Colors.black87,
+                Colors.transparent,
+              ],
+              stops: [0.0, 0.2],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  AlignmentGeometry begin;
+  AlignmentGeometry end;
+  List<double>? stops;
+  List<Color> colorsGradients;
+
+  _CustomGradient(
+      {required this.begin,
+      required this.end,
+      this.stops,
+      required this.colorsGradients});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: begin,
+            end: end,
+            stops: stops,
+            colors: colorsGradients,
+          ),
         ),
       ),
     );
