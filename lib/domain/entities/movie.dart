@@ -1,4 +1,11 @@
+import 'package:isar/isar.dart';
+
+part 'movie.g.dart';
+
+
+@collection
 class Movie {
+  Id isarId = Isar.autoIncrement; // you can also use id = null to auto increment
   final bool adult;
   final String backdropPath;
   final List<String> genreIds;
@@ -15,6 +22,7 @@ class Movie {
   final int voteCount;
 
   Movie({
+    
     required this.adult,
     required this.backdropPath,
     required this.genreIds,
