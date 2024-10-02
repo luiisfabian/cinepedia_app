@@ -13,8 +13,8 @@ class LocalStorageRepositoryImple extends LocalStorageRepository {
   }
 
   @override
-  Future<List<Movie>> loadMovies({int limit = 10, Offset = 0}) {
-    return dataSource.loadMovies(limit: limit, Offset: Offset);
+  Future<List<Movie>> loadMovies({int limit = 10, offset = 0}) {
+    return dataSource.loadMovies(limit: limit, offset: offset);
   }
 
   @override
