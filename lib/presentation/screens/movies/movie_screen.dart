@@ -222,7 +222,7 @@ class _CustomSliverAppBar extends ConsumerWidget {
         IconButton(
           onPressed: () {
             //todo regalizar la funcion de toogle
-             ref.watch(localStorageRepositoryProvider);
+             ref.watch(localStorageRepositoryProvider).toogleFavorite(movie);
           },
           icon: Icon(
             Icons.favorite_border_rounded,
